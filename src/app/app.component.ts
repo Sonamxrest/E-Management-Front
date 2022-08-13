@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,11 @@ export class AppComponent implements OnInit {
   title = 'e-manageent-front';
   data
     = [];
+
+  public constructor(private http: HttpClient) {
+
+  }
+
   todo = [
     'Get to work',
     'Pick up groceries',
@@ -31,19 +37,23 @@ export class AppComponent implements OnInit {
     'Check e-mail',
     'Walk dog'
   ];
+  username = 'asd';
+  password = 'asd';
+
   ngOnInit(): void {
     for (let i = 0; i < 6; i++) {
-  this.data.push({
+      this.data.push({
         balance: '$3,946.45',
-          picture: 'http://placehold.it/32x32',
-          age: 23,
-          name: 'Bird Ramsey',
-          gender: 'male',
-          company: 'NIMON ' + i,
-          email: 'birdramsey@nimon.com'
+        picture: 'http://placehold.it/32x32',
+        age: 23,
+        name: 'Bird Ramsey',
+        gender: 'male',
+        company: 'NIMON ' + i,
+        email: 'birdramsey@nimon.com'
       });
     }
   }
+
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -53,5 +63,19 @@ export class AppComponent implements OnInit {
         event.previousIndex,
         event.currentIndex);
     }
+  }
+
+  submit() {
+    const data = {
+      username: this.username,
+      password: this.password
+    };
+    this.http.post('http://localhost:8080/login', data , {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      }
+    }).subscribe((x) => {
+      console.log(data);
+    });
   }
 }
